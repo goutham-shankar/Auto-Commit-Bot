@@ -44,8 +44,10 @@ jobs:
           git add commit_log.txt
           git commit -m "chore: ${EMOJI} Auto commit #${COUNT}" || echo "No changes to commit"
 
-      - name: Push to branch
-        run: git push -f origin auto-update
+     - name: Push to branch
+  run: |
+    git push -f https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git auto-update
+
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
