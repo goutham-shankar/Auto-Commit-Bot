@@ -19,7 +19,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          persist-credentials: false  # disable default token to use PAT explicitly
+          persist-credentials: false  # disable default GITHUB_TOKEN credentials
 
       - name: Setup Git
         run: |
@@ -59,8 +59,8 @@ jobs:
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
-          git fetch origin main
-          git reset --hard origin/main
+          git fetch origin main || echo "No remote branch yet"
+          git reset --hard origin/main || echo "No remote branch to reset to"
           git push --force-with-lease https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git main
 
       - name: Create or update Pull Request
