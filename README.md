@@ -228,10 +228,3 @@ To manually trigger a commit:
     <i>Stay committed to your goals, one auto-commit at a time.</i>
   </p>
 </div>
-
-
-<p align="center">
-  <a href="../../actions/workflows/auto-commit.yml">
-    <img src="https://img.shields.io/badge/TRIGGER_NOW-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="Trigger Now">
-  </a>
-</p>
