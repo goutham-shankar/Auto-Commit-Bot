@@ -1,12 +1,24 @@
-# 🤖 Auto Commit Bot
+<h1 align="center">🤖 Auto Commit Bot</h1>
 
-![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
-![Shell Script](https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
+<p align="center">
+  <img src="https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="GitHub Actions">
+  <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  <img src="https://img.shields.io/badge/Shell_Script-121011?style=for-the-badge&logo=gnu-bash&logoColor=white" alt="Shell Script">
+  <img src="https://img.shields.io/badge/Last_Update-2025--06--14-brightgreen?style=for-the-badge" alt="Last Update">
+</p>
 
 <div align="center">
-  <img src="https://i.imgur.com/4uHz4zO.gif" alt="Auto Commit Bot" width="450px">
-  <h3>Stay motivated with daily auto commits and inspirational quotes!</h3>
+
+```
+    _         _          ____                          _ _     ____        _   
+   / \  _   _| |_ ___   / ___|___  _ __ ___  _ __ ___ (_) |_  | __ )  ___ | |_ 
+  / _ \| | | | __/ _ \ | |   / _ \| '_ ` _ \| '_ ` _ \| | __| |  _ \ / _ \| __|
+ / ___ \ |_| | || (_) || |__| (_) | | | | | | | | | | | | |_  | |_) | (_) | |_ 
+/_/   \_\__,_|\__\___/  \____\___/|_| |_| |_|_| |_| |_|_|\__| |____/ \___/ \__|
+                                                                               
+```
+
+  <h3>🚀 Keep your GitHub contribution graph active with daily motivational commits</h3>
 </div>
 
 ## 📚 Table of Contents
@@ -15,7 +27,7 @@
 - [🚀 Getting Started](#-getting-started)
 - [⚙️ Configuration](#️-configuration)
 - [📊 Understanding the Output](#-understanding-the-output)
-- [👤 Contributing](#-contributing)
+- [🎮 Interactive Usage](#-interactive-usage)
 - [👨‍💻 Author](#-author)
 
 ## 🌟 Features
@@ -49,13 +61,16 @@
 1. **Fork or clone this repository**
 
 2. **Set up the PAT_TOKEN secret**
-   - Go to your repository settings > Secrets > Actions
-   - Create a new secret named `PAT_TOKEN` with your personal access token
+   ```
+   Repository Settings → Secrets → Actions → New Repository Secret
+   Name: PAT_TOKEN
+   Value: [your personal access token]
+   ```
 
 3. **Enable the workflow**
-   - Go to the Actions tab in your repository
-   - Enable GitHub Actions workflows if they're disabled
-   - Select the "Auto Commit" workflow
+   ```
+   Actions tab → "I understand my workflows, go ahead and enable them"
+   ```
 
 4. **First run**
    - Manually trigger your first run by clicking "Run workflow"
@@ -94,7 +109,7 @@ When manually triggering the workflow, you can customize:
 
 ### Customizing Quotes and Emojis
 
-To customize the quotes and emojis used by the bot, edit the arrays in the workflow file:
+To add your own inspirational quotes or favorite emojis, edit these arrays in the workflow file:
 
 ```yaml
 EMOJIS=("🎯" "🔥" "💪" "📅" "🧠" "🚀" "💻" "✅" "🌟" "⚡" "🏆" "🔄" "🌈" "🎨" "📊" "🔍")
@@ -117,7 +132,7 @@ QUOTES=(
 Each entry in your `commit_log.txt` will look like:
 
 ```
-42. 🚀 Commit on 2025-06-14 08:53:04 (Saturday): Success doesn't just find you. You have to go out and get it.
+42. 🚀 Commit on 2025-06-14 08:55:55 (Saturday): Success doesn't just find you. You have to go out and get it.
 ```
 
 ### Weekly Summaries
@@ -140,51 +155,111 @@ Every 10th commit creates a special markdown file (`milestone_summary_XX.md`) th
 - Current statistics (date, time, day of week)
 - Recent commit history
 
+Example milestone summary:
+
+```markdown
+# Milestone Reached: Commit #50 🎉
+
+Congratulations on reaching 50 daily commits!
+
+## Stats
+- Date: 2025-06-14
+- Time: 08:55:55
+- Day of week: Saturday
+- Days left in year: 200
+
+## Recent Commits
+[Last 10 entries from your commit_log.txt]
+```
+
 </details>
 
-## 🤝 Try It Now!
-
-<div align="center">
-  
-  **Click the button below to manually trigger a commit right now!**
-  
-  [<img src="https://img.shields.io/badge/RUN_WORKFLOW-2088FF?style=for-the-badge&logoColor=white" alt="Run Workflow">](../../actions/workflows/auto-commit.yml)
-
-</div>
-
-## 👤 Contributing
+## 🎮 Interactive Usage
 
 <details>
 <summary><b>Click to expand/collapse</b></summary>
 
-Contributions are welcome! Here are some ways you can contribute:
+### Manual Trigger
 
-- 🐛 Report bugs
-- 💡 Suggest new features
-- 🛠️ Submit pull requests
+To manually trigger a commit:
 
-Please feel free to customize this bot for your own needs!
+1. Go to the **Actions** tab in your repository
+2. Select the **Auto Commit** workflow
+3. Click **Run workflow**
+4. (Optional) Fill in the custom options:
+   - Add a custom message
+   - Choose a specific emoji
+   - Opt to skip the motivational quote
+
+### Example Custom Commits
+
+<table>
+<tr>
+<th>Purpose</th>
+<th>Custom Message</th>
+<th>Emoji</th>
+<th>Result</th>
+</tr>
+<tr>
+<td>Celebrate</td>
+<td>Reached 1000 stars!</td>
+<td>🎉</td>
+<td><code>chore: 🎉 Auto commit #42 - Reached 1000 stars! (manual trigger)</code></td>
+</tr>
+<tr>
+<td>Project update</td>
+<td>Updated Node.js version</td>
+<td>📦</td>
+<td><code>chore: 📦 Auto commit #43 - Updated Node.js version (manual trigger)</code></td>
+</tr>
+<tr>
+<td>Daily reminder</td>
+<td>Remember to update docs</td>
+<td>📝</td>
+<td><code>chore: 📝 Auto commit #44 - Remember to update docs (manual trigger)</code></td>
+</tr>
+</table>
 
 </details>
 
 ## 👨‍💻 Author
 
 <div align="center">
-  <a href="https://github.com/goutham-shankar">
-    <img src="https://github.com/goutham-shankar.png" width="100px;" alt="Author Avatar"/><br>
-    <sub><b>Goutham Shankar</b></sub>
-  </a>
-  <br>
-  <a href="https://github.com/goutham-shankar">
-    <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
-  </a>
+  <h3>Goutham Shankar</h3>
+  <p>
+    <a href="https://github.com/goutham-shankar">
+      <img src="https://img.shields.io/badge/GitHub-goutham--shankar-blue?style=for-the-badge&logo=github" alt="GitHub">
+    </a>
+  </p>
+  
+  <p>
+    <i>Stay committed to your goals, one auto-commit at a time.</i>
+  </p>
 </div>
 
-## 📊 Live Stats
-
-Current streak: View the `commit_log.txt` file to see your current streak!
+---
 
 <div align="center">
-  <img src="https://media.giphy.com/media/5xaOcLGm3mKRSpTYGDm/giphy.gif" width="300px">
-  <h3>Keep up the great work! 💪</h3>
+  
+### 📈 Live Commit Stats
+
+Current streak: Check `commit_log.txt` to see your active streak!
+
+```
+ ____  _              _____                            _   
+/ ___|| |_ __ _ _   _|_   _|__ _ __ ___  _ __ ___  ___| |_ 
+\___ \| __/ _` | | | | | |/ _ \ '_ ` _ \| '__/ _ \/ __| __|
+ ___) | || (_| | |_| | | |  __/ | | | | | | |  __/ (__| |_ 
+|____/ \__\__,_|\__, | |_|\___|_| |_| |_|_|  \___|\___|\__|
+                |___/                                      
+```
+
+**Last updated: 2025-06-14 08:55:55**
+
 </div>
+
+<p align="center">
+  <a href="../../actions/workflows/auto-commit.yml">
+    <img src="https://img.shields.io/badge/TRIGGER_NOW-2088FF?style=for-the-badge&logo=github-actions&logoColor=white" alt="Trigger Now">
+  </a>
+</p>
