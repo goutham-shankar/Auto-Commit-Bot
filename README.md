@@ -63,12 +63,19 @@
    ```
    Actions tab → "I understand my workflows, go ahead and enable them"
    ```
+4. **Set up the USERNAME / EMAIL secret**
+   ```
+   name: Setup Git
+        run: |
+          git config user.name "goutham-shankar"
+          git config user.email "gouthamsankarv@gmail.com"
+   ```
 
-4. **First run**
+5. **First run**
    - Manually trigger your first run by clicking "Run workflow"
    - The bot will create your first commit and start tracking!
 
-5. **Sit back and watch**
+6. **Sit back and watch**
    - The bot will now commit daily at 07:00 UTC
    - Your GitHub contribution graph will stay active!
 
