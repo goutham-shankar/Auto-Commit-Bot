@@ -1,4 +1,6 @@
 name: Auto Commit to Main Branch
+permissions:
+  contents: write
 
 on:
   schedule:
