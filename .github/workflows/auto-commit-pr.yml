@@ -1,11 +1,12 @@
 name: Auto Commit to Main Branch
+
 permissions:
   contents: write
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Runs every day at 7:00 UTC
-  workflow_dispatch:      # Allows manual trigger
+    - cron: '0 7 * * *'
+  workflow_dispatch:
 
 jobs:
   auto-commit:
@@ -45,6 +46,7 @@ jobs:
 
           git add commit_log.txt
           git commit -m "chore: ${RANDOM_EMOJI} Auto commit #${COUNT}" || echo "No changes to commit"
+
       - name: Push changes to main
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
