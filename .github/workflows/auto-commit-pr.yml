@@ -1,24 +1,29 @@
-name: Daily Contribution Commit
+name: Auto Commit to Main Branch
 
 on:
   schedule:
-    - cron: '0 7 * * *' # Every day at 7 AM UTC
-  workflow_dispatch:
+    - cron: '0 7 * * *'  # Runs every day at 7:00 UTC
+  workflow_dispatch:      # Allows manual trigger
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
 
-      - name: Generate daily commit
+      - name: Setup Git
         run: |
-          # Random emoji
-          EMOJIS=("🎯" "🔥" "💪" "📅" "🧠" "🚀" "💻" "✅")
-          RANDOM_EMOJI=${EMOJIS[$RANDOM % ${#EMOJIS[@]}]}
+          git config --global user.name "your-username"
+          git config --global user.email "your-email@example.com"
 
-          # Pick a random quote
+      - name: Create or update commit_log.txt
+        run: |
+          EMOJIS=("🎯" "🔥" "💪" "📅" "🧠" "🚀" "💻" "✅")
           QUOTES=(
             "Push yourself, because no one else is going to do it for you."
             "Stay positive, work hard, make it happen."
@@ -27,19 +32,20 @@ jobs:
             "Success doesn’t just find you. You have to go out and get it."
             "Great things never come from comfort zones."
           )
+
+          RANDOM_EMOJI=${EMOJIS[$RANDOM % ${#EMOJIS[@]}]}
           RANDOM_QUOTE=${QUOTES[$RANDOM % ${#QUOTES[@]}]}
 
-          # Count previous commits
           COUNT=$(grep -c "^" commit_log.txt 2>/dev/null || echo 0)
           COUNT=$((COUNT + 1))
 
-          # Append to file
           echo "${COUNT}. ${RANDOM_EMOJI} Commit on $(date): ${RANDOM_QUOTE}" >> commit_log.txt
 
-          # Configure Git
-          git config --global user.name "goutham-shankar"
-          git config --global user.email "gouthamsankarv@gmail.com"
-
           git add commit_log.txt
-          git commit -m "chore: ${RANDOM_EMOJI} Auto commit #${COUNT}"
-          git push
+          git commit -m "chore: ${RANDOM_EMOJI} Auto commit #${COUNT}" || echo "No changes to commit"
+
+      - name: Push changes to main
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git push https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git main
