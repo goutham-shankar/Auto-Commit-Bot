@@ -60,7 +60,7 @@ jobs:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: |
           git fetch origin auto-update
-          git reset --hard origin/auto-update
+          git reset --hard origin/main
           git push --force-with-lease https://x-access-token:${PAT_TOKEN}@github.com/${{ github.repository }}.git auto-update
 
       - name: Create or update Pull Request
