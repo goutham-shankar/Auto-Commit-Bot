@@ -123,6 +123,13 @@ jobs:
           # Save variables for commit message
           echo "COUNT=${COUNT}" >> $GITHUB_ENV
           echo "RANDOM_EMOJI=${RANDOM_EMOJI}" >> $GITHUB_ENV
+          
+          # Check if this is a milestone commit (every 10th)
+          if (( $COUNT % 10 == 0 )); then
+            echo "IS_MILESTONE=true" >> $GITHUB_ENV
+          else
+            echo "IS_MILESTONE=false" >> $GITHUB_ENV
+          fi
 
       - name: Check file size and rotate if needed
         run: |
@@ -162,8 +169,8 @@ jobs:
           git commit -m "$COMMIT_MSG" || echo "No changes to commit"
           git push origin main
 
-      - name: Create milestone summary (every 10th commit)
-        if: ${{ env.COUNT % 10 == 0 }}
+      - name: Create milestone summary
+        if: env.IS_MILESTONE == 'true'
         run: |
           SUMMARY_FILE="milestone_summary_${COUNT}.md"
           
