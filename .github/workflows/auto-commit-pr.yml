@@ -43,7 +43,6 @@ jobs:
 
           git add commit_log.txt
           git commit -m "chore: ${RANDOM_EMOJI} Auto commit #${COUNT}" || echo "No changes to commit"
-
       - name: Push changes to main
         env:
           PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
