@@ -229,26 +229,6 @@ To manually trigger a commit:
   </p>
 </div>
 
----
-
-<div align="center">
-  
-### 📈 Live Commit Stats
-
-Current streak: Check `commit_log.txt` to see your active streak!
-
-```
- ____  _              _____                            _   
-/ ___|| |_ __ _ _   _|_   _|__ _ __ ___  _ __ ___  ___| |_ 
-\___ \| __/ _` | | | | | |/ _ \ '_ ` _ \| '__/ _ \/ __| __|
- ___) | || (_| | |_| | | |  __/ | | | | | | |  __/ (__| |_ 
-|____/ \__\__,_|\__, | |_|\___|_| |_| |_|_|  \___|\___|\__|
-                |___/                                      
-```
-
-**Last updated: 2025-06-14 08:55:55**
-
-</div>
 
 <p align="center">
   <a href="../../actions/workflows/auto-commit.yml">
