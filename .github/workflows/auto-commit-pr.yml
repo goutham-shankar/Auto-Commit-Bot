@@ -1,39 +1,195 @@
-name: Simple Auto Commit
+name: Auto Commit
 
 permissions:
   contents: write
 
 on:
   schedule:
-    - cron: '25 3 * * *'  # runs daily at 3:25 UTC (8:55 AM IST)
-  workflow_dispatch:  # Allows manual triggering
+    - cron: '47 2 * * *'  # runs daily at 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      custom_message:
+        description: 'Optional custom message to include in commit'
+        required: false
+        default: ''
+      skip_quote:
+        description: 'Skip adding a motivational quote'
+        required: false
+        default: 'false'
+      extra_emoji:
+        description: 'Add extra emoji (leave blank for random)'
+        required: false
+        default: ''
 
 jobs:
   auto-commit:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout repository
+      - name: Checkout main branch
         uses: actions/checkout@v3
         with:
+          ref: main
           fetch-depth: 0
-          token: ${{ secrets.PAT_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}  # Use PAT for checkout
 
-      - name: Configure Git
+      - name: Setup Git
         run: |
           git config user.name "goutham-shankar"
           git config user.email "gouthamsankarv@gmail.com"
 
-      - name: Create or update commit file
+      - name: Generate stats data
+        id: stats
         run: |
-          # Get the current date and time
-          TIMESTAMP=$(date +'%Y-%m-%d %H:%M:%S')
+          echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+          echo "TIME=$(date +'%H:%M:%S')" >> $GITHUB_ENV
+          echo "WEEKDAY=$(date +'%A')" >> $GITHUB_ENV
+          echo "DAYS_LEFT_IN_YEAR=$(( $(date -d "Dec 31" +%j) - $(date +%j) ))" >> $GITHUB_ENV
+
+      - name: Create or update commit_log.txt
+        run: |
+          # Emojis array - expanded with more options
+          EMOJIS=("🎯" "🔥" "💪" "📅" "🧠" "🚀" "💻" "✅" "🌟" "⚡" "🏆" "🔄" "🌈" "🎨" "📊" "🔍")
           
-          # Create/update the commit file
-          echo "Auto commit: $TIMESTAMP" >> auto-commit-log.txt
+          # Quotes array - expanded with more motivational quotes
+          QUOTES=(
+            "Push yourself, because no one else is going to do it for you."
+            "Stay positive, work hard, make it happen."
+            "Dream it. Wish it. Do it."
+            "Don't stop when you're tired. Stop when you're done."
+            "Success doesn't just find you. You have to go out and get it."
+            "Great things never come from comfort zones."
+            "The harder you work for something, the greater you'll feel when you achieve it."
+            "Don't watch the clock; do what it does. Keep going."
+            "The only way to do great work is to love what you do."
+            "Fall seven times, stand up eight."
+            "Focus on your goal. Don't look in any direction but ahead."
+            "Believe you can and you're halfway there."
+            "If opportunity doesn't knock, build a door."
+            "Action is the foundational key to all success."
+          )
           
-          # Add the file to git
-          git add auto-commit-log.txt
+          # Select emoji - either random or user-specified
+          if [[ -z "${{ github.event.inputs.extra_emoji }}" ]]; then
+            RANDOM_EMOJI=${EMOJIS[$RANDOM % ${#EMOJIS[@]}]}
+          else
+            RANDOM_EMOJI="${{ github.event.inputs.extra_emoji }}"
+          fi
           
-          # Commit and push
-          git commit -m "Auto commit: $TIMESTAMP" || echo "No changes to commit"
+          # Handle quotes based on user input
+          if [[ "${{ github.event.inputs.skip_quote }}" == "true" ]]; then
+            RANDOM_QUOTE=""
+          else
+            RANDOM_QUOTE=${QUOTES[$RANDOM % ${#QUOTES[@]}]}
+          fi
+          
+          # Handle custom message
+          CUSTOM_MSG="${{ github.event.inputs.custom_message }}"
+          
+          # Get current count
+          COUNT=$(grep -c "^" commit_log.txt 2>/dev/null || echo 0)
+          COUNT=$((COUNT + 1))
+          
+          # Create entry with dynamic content
+          ENTRY="${COUNT}. ${RANDOM_EMOJI} Commit on $(date +'%Y-%m-%d %H:%M:%S')"
+          
+          # Add day of week
+          ENTRY="${ENTRY} (${WEEKDAY})"
+          
+          # Add quote if not skipped
+          if [[ ! -z "$RANDOM_QUOTE" ]]; then
+            ENTRY="${ENTRY}: ${RANDOM_QUOTE}"
+          fi
+          
+          # Add custom message if provided
+          if [[ ! -z "$CUSTOM_MSG" ]]; then
+            ENTRY="${ENTRY} | ${CUSTOM_MSG}"
+          fi
+          
+          # Add entry to log file
+          echo "$ENTRY" >> commit_log.txt
+          
+          # Add weekly summary every 7th commit
+          if (( $COUNT % 7 == 0 )); then
+            echo "" >> commit_log.txt
+            echo "---- Weekly Summary (Commit #$COUNT) ----" >> commit_log.txt
+            echo "✨ Total commits this week: 7" >> commit_log.txt
+            echo "📆 Days left in year: $DAYS_LEFT_IN_YEAR" >> commit_log.txt
+            echo "🎯 Keep the streak going!" >> commit_log.txt
+            echo "-----------------------------------" >> commit_log.txt
+            echo "" >> commit_log.txt
+          fi
+          
+          # Save variables for commit message
+          echo "COUNT=${COUNT}" >> $GITHUB_ENV
+          echo "RANDOM_EMOJI=${RANDOM_EMOJI}" >> $GITHUB_ENV
+          
+          # Check if this is a milestone commit (every 10th)
+          if (( $COUNT % 10 == 0 )); then
+            echo "IS_MILESTONE=true" >> $GITHUB_ENV
+          else
+            echo "IS_MILESTONE=false" >> $GITHUB_ENV
+          fi
+
+      - name: Check file size and rotate if needed
+        run: |
+          FILE_SIZE=$(stat -c%s "commit_log.txt" 2>/dev/null || echo 0)
+          MAX_SIZE=1000000 # ~1MB
+          
+          if [ "$FILE_SIZE" -gt "$MAX_SIZE" ]; then
+            # Archive the old log file
+            ARCHIVE_NAME="commit_log_archive_$(date +'%Y%m%d').txt"
+            mv commit_log.txt $ARCHIVE_NAME
+            
+            # Create new log file with header
+            echo "# Commit Log - New File Started on $(date +'%Y-%m-%d')" > commit_log.txt
+            echo "Previous log archived as $ARCHIVE_NAME" >> commit_log.txt
+            echo "---" >> commit_log.txt
+            
+            # Add both files
+            git add $ARCHIVE_NAME commit_log.txt
+          else
+            git add commit_log.txt
+          fi
+
+      - name: Commit and push changes
+        run: |
+          # Determine commit message
+          if [[ ! -z "${{ github.event.inputs.custom_message }}" ]]; then
+            COMMIT_MSG="chore: ${RANDOM_EMOJI} Auto commit #${COUNT} - ${{ github.event.inputs.custom_message }}"
+          else
+            COMMIT_MSG="chore: ${RANDOM_EMOJI} Auto commit #${COUNT}"
+          fi
+          
+          # Additional context if workflow was manually triggered
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            COMMIT_MSG="${COMMIT_MSG} (manual trigger)"
+          fi
+          
+          git commit -m "$COMMIT_MSG" || echo "No changes to commit"
+          git push origin main
+
+      - name: Create milestone summary
+        if: env.IS_MILESTONE == 'true'
+        run: |
+          SUMMARY_FILE="milestone_summary_${COUNT}.md"
+          
+          echo "# Milestone Reached: Commit #${COUNT} 🎉" > $SUMMARY_FILE
+          echo "" >> $SUMMARY_FILE
+          echo "Congratulations on reaching ${COUNT} daily commits!" >> $SUMMARY_FILE
+          echo "" >> $SUMMARY_FILE
+          echo "## Stats" >> $SUMMARY_FILE
+          echo "- Date: ${DATE}" >> $SUMMARY_FILE
+          echo "- Time: ${TIME}" >> $SUMMARY_FILE
+          echo "- Day of week: ${WEEKDAY}" >> $SUMMARY_FILE
+          echo "- Days left in year: ${DAYS_LEFT_IN_YEAR}" >> $SUMMARY_FILE
+          echo "" >> $SUMMARY_FILE
+          echo "## Recent Commits" >> $SUMMARY_FILE
+          
+          # Get recent commits (up to 10)
+          tail -n 10 commit_log.txt >> $SUMMARY_FILE
+          
+          # Add and commit milestone summary
+          git add $SUMMARY_FILE
+          git commit -m "docs: 🏆 Milestone summary for ${COUNT} commits" || echo "No milestone to commit"
           git push origin main
