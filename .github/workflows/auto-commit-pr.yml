@@ -5,7 +5,7 @@ permissions:
 
 on:
   schedule:
-    - cron: '47 2 * * *'  # runs daily at 07:00 UTC
+    - cron: '47 4 * * *'
   workflow_dispatch:
     inputs:
       custom_message:
